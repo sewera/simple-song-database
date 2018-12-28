@@ -18,6 +18,7 @@ void add_track(struct Track* new_track, char new_path[PATH_LENGTH], enum Format 
 ```
 Wydaje mi się, że będzie wygodniej używać metody `fgets`, a nie `scanf`, bo ta druga nie pozwala na wpisanie spacji w jedno pole.
 Chyba że w zadaniu będzie trzeba do jednego pola przypisywać tylko jeden wyraz.
+
 2. Zapis do pliku tekstowego: [rosettacode](https://rosettacode.org/wiki/Simple_database#C)
 3. Zapis do pliku binarnego: [stackoverflow](https://stackoverflow.com/questions/29768106/write-struct-to-binary-file-then-read-file-and-print-data)
 4. Odczyt z plików: (prawdopodobnie oba powyższe)
