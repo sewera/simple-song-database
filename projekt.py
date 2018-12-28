@@ -1,17 +1,20 @@
 """
 'Song Database' Simple Python Program
-Version: v0.0.8 Alpha
+Version: v0.1 Beta
 Author: Blazej Sewera
 Copyright 2018
 E-mail: blazejok1@wp.pl
 Webpage: [https://github.com/jazzsewera]
 Python version: 3.7.1
+Dependencies: dill (!), collections, operator, re, json
+(!) - non-standard dependency
 Documentation in Polish due to the program being a university project.
 """
 from collections import namedtuple as nt
 from operator import attrgetter
 import re
 import json
+import dill
 
 class SongDatabase(object):
     """
@@ -36,6 +39,7 @@ class SongDatabase(object):
     """ Pola obiektu: """
     songlist = [] # przechowuje liste utworow
     filename = 'songs.json' # przechowuje nazwe pliku
+    bin_filename = 'songs.pickle' # przechowuje nazwe pliku binarnego
     searchresults = [] # przechowuje liste utworzona w wyniku wyszukiwania `search_in_songlist()`
 
     def add_song(self, new_artist=None, new_album=None, new_title=None, new_year=None, new_duration_m=None, new_duration_s=None):
@@ -85,6 +89,31 @@ class SongDatabase(object):
         with open(filename, 'r') as input_file:
             lines_from_file = [line.rstrip('\n') for line in input_file]
         self.songlist = [ json.loads( line, object_hook=lambda l: nt( 'song', l.keys() )( *l.values() ) ) for line in lines_from_file ]
+
+    def write_to_binary_file(self, filename=bin_filename):
+        """
+        Metoda zapisujaca obecna liste utworow do pliku binarnego. Nie polecam tej metody, poniewaz pliki json sa
+        powszechnie uzywane i rozpoznawane oraz istnieje wiele gotowych bibliotek do odczytu jsonow.
+        Uzywana jest biblioteka dill. Mozna ja zainstalowac poprzez komende:
+            pip install dill
+        [Strona projektu dill](https://pypi.org/project/dill/)
+        Args:
+            filename - nazwa pliku binarnego. Analogicznie jak w metodzie `write_to_text_file`
+        """
+        with open(filename, 'wb') as bin_file:
+            dill.dump(self.songlist, bin_file)
+
+    def open_from_binary_file(self, filename=bin_filename):
+        """
+        Metoda zapisujaca do listy songlist z pliku o nazwie filename.
+        Uzywana jest biblioteka dill. Mozna ja zainstalowac poprzez komende:
+            pip install dill
+        [Strona projektu dill](https://pypi.org/project/dill/)
+        Args:
+            filename - analogicznie jak w powyzszych metodach
+        """
+        with open(filename, 'rb') as bin_file:
+            self.songlist = dill.load(bin_file)
 
     def sort_songlist(self, sort_by='artist'):
         """
@@ -153,6 +182,8 @@ db.pretty_print_songlist()
 db.sort_songlist(sort_by='title') # w tych nawiasach mozemy podac w jakim kryterium chcemy sortowac.
 db.pretty_print_songlist()
 db.write_to_text_file() # zapis do pliku (domyslnie songs.json)
+db.write_to_binary_file() # zapis do pliku binarnego (zobacz dokumentacje dla tej metody!!!)
+# pamietaj o dodaniu biblioteki `dill`
 
 # Wyszukiwanie w bazie danych:
 db.search_in_songlist(input('Search by album: '), search_by='album') # wyszukiwanie utworow na podstawie tego, co wpisze uzytkownik - metoda input()
@@ -161,7 +192,9 @@ db.pretty_print_songlist(searchresults=True)
 """
 Poki co, napisana jest wiekszosc backendu i tylko mala czesc frontendu.
 TODO:
-    napisac zapis / odczyt do i z pliku binarnego (biblioteka pickle)
     napisac frontend
+Changelog:
+    v0.1 Beta:
+        dodana obsluga plikow binarnych (biblioteka dill)
 Dokumentacja stworzona na podstawie zalecen Google dot. dokumentacji w Pythonie.
 """
