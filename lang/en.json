@@ -1,1 +1,21 @@
-{"greeting": "welcome to our program", "choice": "Please select option (h for help): "}
+{
+  "greeting": "Song Database Program",
+  "help": "Available options:\n\ta\tAdd a song\n\ts\tSearch for song(s)\n\tp\tPrint song list\n\tr\tSearch and remove song(s)\n\tfo\tRead data from text file\n\tfob\tRead data from binary file\n\tfw\tWrite data to text file\n\tfwb\tWrite data to binary file\n\tfc\tChange filename for text file\n\tfcb\tChange filename for binary file\n\tcl\tChange to Polish\n\te\tExit",
+  "invalid_input": "Invalid option",
+  "choice_prompt": "Please choose an option (h - help): ",
+  "search_main": "Search",
+  "criteria_help": "\tal\tAlbum\n\tar\tArtist\n\tt\tTitle\n\ty\tYear",
+  "search_choice": "Search by [al]: ",
+  "search_string_prompt": "Search: ",
+  "search_no_results": "No matching songs",
+  "artist": "Artist",
+  "album": "Album",
+  "title": "Title",
+  "year": "Year",
+  "duration_m": "Duration (minutes)",
+  "duration_s": "Duration (seconds)",
+  "ensure": "Are you sure you want to remove listed songs? [y/N]: ",
+  "aborted": "Operation aborted.",
+  "change_text_filename": "Enter new filename (default songs.json): ",
+  "change_binary_filename": "Enter new filename (default songs.pickle): "
+}

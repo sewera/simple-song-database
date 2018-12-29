@@ -1,13 +1,21 @@
 {
   "greeting": "Program Song Database",
+  "help": "Dostępne opcje:\n\ta\tDodawanie utworu\n\ts\tWyszukiwanie utworu/ów\n\tp\tWyświetlenie listy utworów\n\tr\tWyszukanie i usunięcie utworu/ów\n\tfo\tOdczytanie bazy z pliku tekstowego\n\tfob\tOdczytanie bazy z pliku binarnego\n\tfw\tZapisanie bazy do pliku tekstowego\n\tfwb\tZapisanie bazy do pliku binarnego\n\tfc\tZmiana nazwy pliku tekstowego\n\tfcb\tZmiana nazwy pliku binarnego\n\tcl\tChange to English\n\te\tWyjście z programu",
   "invalid_input": "Niewłaściwa opcja",
   "choice_prompt": "Proszę wybrać opcję (h - pomoc): ",
   "search_main": "Wyszukiwanie utworu",
-  "search_choice": "Kryterium wyszukiwania [album]: ",
+  "criteria_help": "\tal\tAlbum\n\tar\tArtysta\n\tt\tTytuł\n\ty\tRok",
+  "search_choice": "Kryterium wyszukiwania [al]: ",
   "search_string_prompt": "Wyszukaj: ",
   "search_no_results": "Brak wyników",
   "artist": "Artysta",
   "album": "Album",
   "title": "Tytuł",
-  "year": "Rok"
+  "year": "Rok",
+  "duration_m": "Czas trwania (minuty)",
+  "duration_s": "Czas trwania (sekundy)",
+  "ensure": "Czy jesteś pewien, że chcesz usunąć powyższe utwory? [y/N]: ",
+  "aborted": "Operacja została przerwana.",
+  "change_text_filename": "Wpisz nową nazwę pliku (domyślnie songs.json): ",
+  "change_binary_filename": "Wpisz nową nazwę pliku (domyślnie songs.pickle): "
 }
