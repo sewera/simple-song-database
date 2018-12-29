@@ -1,0 +1,13 @@
+{
+  "greeting": "Program Song Database",
+  "invalid_input": "Niewłaściwa opcja",
+  "choice_prompt": "Proszę wybrać opcję (h - pomoc): ",
+  "search_main": "Wyszukiwanie utworu",
+  "search_choice": "Kryterium wyszukiwania [album]: ",
+  "search_string_prompt": "Wyszukaj: ",
+  "search_no_results": "Brak wyników",
+  "artist": "Artysta",
+  "album": "Album",
+  "title": "Tytuł",
+  "year": "Rok"
+}

@@ -1,6 +1,6 @@
 """
 'Song Database' Simple Python Program
-Version: v0.1 Beta
+Version: v0.1.0.1 Beta Backend, Alpha Frontend
 Author: Blazej Sewera
 Copyright 2018
 E-mail: blazejok1@wp.pl
@@ -34,7 +34,6 @@ class SongDatabase(object):
         """
         super(SongDatabase, self).__init__()
         self.filename = filename
-        print('Object SongDatabase created.') # W tym momencie obiekt klasy SongDatabase jest juz utworzony. Mozna bez problemu pominac tego printa.
 
     """ Pola obiektu: """
     songlist = [] # przechowuje liste utworow
@@ -141,6 +140,46 @@ class SongDatabase(object):
         """
         self.searchresults = [song for song in self.songlist if re.search(search_string, attrgetter(search_by)(song), re.IGNORECASE)]
 
+class SongDatabaseHead(object):
+    """
+    Klasa z frontendem dla klasy SongDatabase.
+    """
+
+    def __init__(self, lang='pl'):
+        super(SongDatabaseHead, self).__init__()
+        self.lang = lang
+        with open(self.filenames.get(self.lang), 'r') as langfile:
+            self.messages = json.load(langfile)
+
+    lang = 'pl'
+    filenames = {'pl': 'lang/pl.json', 'en': 'lang/en.json'}
+    messages = {}
+    db = SongDatabase()
+
+    def start(self):
+        _ = self.messages.get
+        menu = {'h': self.help, 's': self.search, 'p': self.pretty_print_songlist, 'e': self.exit}
+        print(_('greeting'))
+        choice = input(_('choice_prompt'))
+        menu.get(choice, self.invalid_input)()
+
+    def help(self):
+        _ = self.messages.get
+        print('help')
+
+    def invalid_input(self):
+        _ = self.messages.get
+        print(_('invalid_input'))
+
+    def search(self):
+        _ = self.messages.get
+        print(_('search_main'))
+        criteria = input(_('search_choice'))
+        search_string = input(_('search_string_prompt'))
+        if criteria == '': criteria = 'album'
+        self.db.search_in_songlist(search_string, search_by=criteria)
+        self.pretty_print_songlist(searchresults=True)
+
     def pretty_print_songlist(self, searchresults=False):
         """
         Metoda wyswietlajaca na ekranie liste utworow lub liste utworzona w wyniku wyszukiwania.
@@ -150,45 +189,25 @@ class SongDatabase(object):
                 False - drukuje cala liste utworow `songlist`
                 True - drukuje liste utworzona w wyniku wyszukiwania `searchresults`
         """
-        print('{0:^25s}|{1:^25s}|{2:^30s}|{3:^6}|{4:>3}:{5:>2}'.format('Artist', 'Album', 'Title', 'Year', 'MM', 'SS'))
+        _ = self.messages.get
+        print('{0:^25s}|{1:^25s}|{2:^30s}|{3:^6}|{4:>3}:{5:>2}'.format(_('artist'), _('album'), _('title'), _('year'), 'MM', 'SS'))
         print('{0:=^96}'.format(''))
         if searchresults == False:
-            for song in self.songlist:
+            for song in self.db.songlist:
                 print('{0:<25s}|{1:<25s}|{2:<30s}|{3:>6}|{4:>3}:{5:>2}'.format(song.artist, song.album, song.title, song.year, song.duration_m, song.duration_s))
         else:
-            if len(self.searchresults) == 0:
-                print('No matching results.')
+            if len(self.db.searchresults) == 0:
+                print(_('search_no_results'))
             else:
-                for song in self.searchresults:
+                for song in self.db.searchresults:
                     print('{0:<25s}|{1:<25s}|{2:<30s}|{3:>6}|{4:>3}:{5:>2}'.format(song.artist, song.album, song.title, song.year, song.duration_m, song.duration_s))
-        print() # pusta linia
+        print() # empty line
 
-"""
-Ponizej sa instrukcje wykonywane w trakcie trwania programu (runtime), czyli jest to odpowiednik funkcji int main()
-"""
-# Tworzenie obiektu db jako baza danych piosenek:
-db = SongDatabase()
+    def exit(self):
+        pass
 
-# Dodanie kilku utworow:
-db.add_song('Phil Collins', 'In the air', 'In the air tonight', 1998, 5, 34)
-db.add_song('Mitch Murder', 'Selection Four', 'Hideaway Remix', 2017, 4, 32)
-db.add_song('Herbie Hancock', 'Head Hunters', 'Chameleon', 1973, 15, 45)
-db.add_song('Herbie Hancock', 'Head Hunters', 'Watermelon Man', 1973, 6, 32)
-# Utwor mozna tez dodac w trakcie wykonywania programu, przez uzytkownika, z klawiatury:
-db.add_song() # Wtedy wywolujemy funkcje bez zadnych argumentow
-
-# Wyswietlenie utworkow w konsoli:
-db.pretty_print_songlist()
-db.sort_songlist(sort_by='title') # w tych nawiasach mozemy podac w jakim kryterium chcemy sortowac.
-db.pretty_print_songlist()
-db.write_to_text_file() # zapis do pliku (domyslnie songs.json)
-db.write_to_binary_file() # zapis do pliku binarnego (zobacz dokumentacje dla tej metody!!!)
-# pamietaj o dodaniu biblioteki `dill`
-
-# Wyszukiwanie w bazie danych:
-db.search_in_songlist(input('Search by album: '), search_by='album') # wyszukiwanie utworow na podstawie tego, co wpisze uzytkownik - metoda input()
-db.pretty_print_songlist(searchresults=True)
-
+dbh = SongDatabaseHead('pl')
+dbh.start()
 """
 Poki co, napisana jest wiekszosc backendu i tylko mala czesc frontendu.
 TODO:
@@ -196,5 +215,9 @@ TODO:
 Changelog:
     v0.1 Beta:
         dodana obsluga plikow binarnych (biblioteka dill)
+    v0.1.0.1 Beta / Alpha:
+        dodana klasa frontendu (SongDatabaseHead)
+        przeniesienie metody pretty_print_songlist do klasy frontendu
+        dodana obsluga plikow jezykowych w formacie json
 Dokumentacja stworzona na podstawie zalecen Google dot. dokumentacji w Pythonie.
 """
