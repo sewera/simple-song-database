@@ -1,6 +1,6 @@
 {
   "greeting": "Song Database Program",
-  "help": "Available options:\n\ta\tAdd a song\n\ts\tSearch for song(s)\n\tp\tPrint song list\n\tr\tSearch and remove song(s)\n\tfo\tRead data from text file\n\tfob\tRead data from binary file\n\tfw\tWrite data to text file\n\tfwb\tWrite data to binary file\n\tfc\tChange filename for text file\n\tfcb\tChange filename for binary file\n\tcl\tChange to Polish\n\te\tExit",
+  "help": "Available options:\n\ta\tAdd a song\n\ts\tSearch for song(s)\n\tso\tSort song list\n\tp\tPrint song list\n\tr\tSearch and remove song(s)\n\tfo\tRead data from text file\n\tfob\tRead data from binary file\n\tfw\tWrite data to text file\n\tfwb\tWrite data to binary file\n\tfc\tChange filename for text file\n\tfcb\tChange filename for binary file\n\tcl\tChange to Polish\n\te\tExit",
   "invalid_input": "Invalid option",
   "choice_prompt": "Please choose an option (h - help): ",
   "search_main": "Search",
@@ -8,6 +8,7 @@
   "search_choice": "Search by [al]: ",
   "search_string_prompt": "Search: ",
   "search_no_results": "No matching songs",
+  "sort_choice": "Sort by [al]: ",
   "artist": "Artist",
   "album": "Album",
   "title": "Title",

@@ -1,6 +1,6 @@
 {
   "greeting": "Program Song Database",
-  "help": "Dostępne opcje:\n\ta\tDodawanie utworu\n\ts\tWyszukiwanie utworu/ów\n\tp\tWyświetlenie listy utworów\n\tr\tWyszukanie i usunięcie utworu/ów\n\tfo\tOdczytanie bazy z pliku tekstowego\n\tfob\tOdczytanie bazy z pliku binarnego\n\tfw\tZapisanie bazy do pliku tekstowego\n\tfwb\tZapisanie bazy do pliku binarnego\n\tfc\tZmiana nazwy pliku tekstowego\n\tfcb\tZmiana nazwy pliku binarnego\n\tcl\tChange to English\n\te\tWyjście z programu",
+  "help": "Dostępne opcje:\n\ta\tDodawanie utworu\n\ts\tWyszukiwanie utworu/ów\n\tso\tSortowanie listy utworów\n\tp\tWyświetlenie listy utworów\n\tr\tWyszukanie i usunięcie utworu/ów\n\tfo\tOdczytanie bazy z pliku tekstowego\n\tfob\tOdczytanie bazy z pliku binarnego\n\tfw\tZapisanie bazy do pliku tekstowego\n\tfwb\tZapisanie bazy do pliku binarnego\n\tfc\tZmiana nazwy pliku tekstowego\n\tfcb\tZmiana nazwy pliku binarnego\n\tcl\tChange to English\n\te\tWyjście z programu",
   "invalid_input": "Niewłaściwa opcja",
   "choice_prompt": "Proszę wybrać opcję (h - pomoc): ",
   "search_main": "Wyszukiwanie utworu",
@@ -8,6 +8,7 @@
   "search_choice": "Kryterium wyszukiwania [al]: ",
   "search_string_prompt": "Wyszukaj: ",
   "search_no_results": "Brak wyników",
+  "sort_choice": "Kryterium sortowania [al]: ",
   "artist": "Artysta",
   "album": "Album",
   "title": "Tytuł",

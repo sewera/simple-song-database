@@ -1,6 +1,6 @@
 """
 'Song Database' Simple Python Program
-Version: v0.2 Beta
+Version: v0.3 Beta
 Author: Blazej Sewera
 Copyright 2018
 E-mail: blazejok1@wp.pl
@@ -149,7 +149,7 @@ class SongDatabaseHead(object):
     filenames = {'pl': 'lang/pl.json', 'en': 'lang/en.json'}
     messages = {}
     db = SongDatabase()
-
+    crit_dict = {'al': 'album', 'ar': 'artist', 't': 'title', 'y': 'year'}
     def start(self):
         _ = self.messages.get
 
@@ -157,6 +157,7 @@ class SongDatabaseHead(object):
             'h': self.help,
             'a': self.add_song,
             's': self.search,
+            'so': self.sort_songlist,
             'p': self.pretty_print_songlist,
             'r': self.remove_songs,
             'fo': self.db.open_from_text_file,
@@ -208,9 +209,19 @@ class SongDatabaseHead(object):
             print(_('criteria_help'))
             criteria = input(_('search_choice')) # like 'al' when empty
         search_string = input(_('search_string_prompt'))
-        crit_dict = {'al': 'album', 'ar': 'artist', 't': 'title', 'y': 'year'}
-        self.db.search_in_songlist(search_string, search_by=crit_dict.get(criteria, 'album'))
+        self.db.search_in_songlist(search_string, search_by=self.crit_dict.get(criteria, 'album'))
         self.pretty_print_songlist(searchresults=True)
+
+    def sort_songlist(self):
+        """
+        Metoda sortujaca wg podanego kryterium na miejscu, czyli bezposrednio w db.songlist
+        """
+        _ = self.messages.get
+        criteria = 'h'
+        while criteria == 'h':
+            print(_('criteria_help'))
+            criteria = input(_('sort_choice')) # like 'al' when empty
+        self.db.sort_songlist(sort_by=self.crit_dict.get(criteria, 'album'))
 
     def remove_songs(self):
         """
@@ -298,5 +309,7 @@ Changelog:
         dodana metoda pozwalajaca usuwac elementy z listy
         dodane metody do frontendu (wszystkie wywolujace metody w klasie SongDatabase)
         dodana metoda zmieniajaca jezyk
+    v0.3 Beta:
+        dodane sortowanie do frontendu
 Dokumentacja stworzona na podstawie zalecen Google dot. dokumentacji w Pythonie.
 """
