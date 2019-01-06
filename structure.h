@@ -9,7 +9,7 @@ struct song {
   int year;
   unsigned char duration_m;
   unsigned char duration_s;
-  struct song *previous;
+  struct song *prev;
   struct song *next;
 };
 typedef struct song Song;
