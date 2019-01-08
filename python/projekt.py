@@ -1,6 +1,6 @@
 """
 'Song Database' Simple Python Program
-Version: v0.3 Beta
+Version: v1.0
 Author: Blazej Sewera
 Copyright 2018
 E-mail: blazejok1@wp.pl
@@ -8,8 +8,12 @@ Webpage: [https://github.com/jazzsewera]
 Python version: 3.7.1
 Dependencies: dill (!), collections, operator, re, json
 (!) - non-standard dependency
+You can install dill with pip:
+
+    pip install dill
+    
 Additional files: lang/pl.json and lang/en.json, also copyrighted 2018
-Documentation in Polish due to the program being a university project.
+Documentation in Polish and English in files `projekt_doc.pl.md` and `projekt_doc.en.md`
 """
 from collections import namedtuple as nt
 from operator import attrgetter
@@ -18,49 +22,21 @@ import json
 import dill
 
 class SongDatabase(object):
-    """
-    Klasa opisujaca baze danych utworow.
-    Jest rozszerzeniem klasy object.
-    """
     def __init__(self, filename='songs.json'):
-        """
-        Funkcja `__init__` to funkcja wykonujaca sie podczas tworzenia nowego obiektu klasy SongDatabase.
-        Kazda funkcja w klasie ma pierwszy argument `self`, poniewaz wywolujac te metode, musimy przekazac tenze obiekt do funkcji.
-        Args:
-            filename - jest to argument typu string ustawiajacy nazwe domyslna pliku tworzonego za pomoca metody write_to_text_file()
-                jest to argument opcjonalny, poniewaz ma wartosc domyslna - songs.json. Rozszerzenie `.json` jest opcjonalne, jednak zaleca sie
-                uzywania go, poniewaz baza danych jest sformatowana w standardzie json.
-        Example:
-            db = SongDatabase(filename='songlist.json')
-        """
         super(SongDatabase, self).__init__()
         self.filename = filename
 
-    """ Pola obiektu: """
-    songlist = [] # przechowuje liste utworow
-    filename = 'songs.json' # przechowuje nazwe pliku
-    bin_filename = 'songs.pickle' # przechowuje nazwe pliku binarnego
-    searchresults = [] # przechowuje liste utworzona w wyniku wyszukiwania `search_in_songlist()`
+    """ Class fields: """
+    songlist = []
+    filename = 'songs.json'
+    bin_filename = 'songs.pickle'
+    searchresults = []
 
     def add_song(self, new_artist, new_album, new_title, new_year, new_duration_m, new_duration_s):
-        """
-        Metoda dodajaca utwor do `songlist`.
-        Args:
-            new_artist - nazwa artysty
-            new_album - nazwa albumu, itd.
-        Example:
-            db.add_song('Toto', 'Toto IV', 'Africa', 1984, 4, 35)
-        """
         song = nt('song', 'artist album title year duration_m duration_s') # namedtuple (krotka, odpowiednik struktury) przechowujaca wszystkie informacje o utworze
         self.songlist.append( song(artist=new_artist, album=new_album, title=new_title, year=new_year, duration_m=new_duration_m, duration_s=new_duration_s) )
 
     def write_to_text_file(self, filename=filename):
-        """
-        Metoda zapisujaca obecna liste utworow do pliku tekstowego o nazwie filename (domyslnie songs.json)
-        Format tego pliku to json, wiecej informacji o tym standardzie: [https://www.json.org]
-        Args:
-            filename - nazwa pliku. Jesli nie zostanie podana, zostanie uzyta nazwa z pola `filename` obiektu.
-        """
         lines = [json.dumps(s._asdict()) for s in self.songlist]
         with open(filename, 'w') as output_file:
             for line in lines:
@@ -68,64 +44,22 @@ class SongDatabase(object):
                 output_file.write('\n')
 
     def open_from_text_file(self, filename=filename):
-        """
-        Metoda zapisujaca do listy songlist z pliku o nazwie filename.
-        Args:
-            filename - analogicznie jak w metodzie write_to_text_file()
-        """
         with open(filename, 'r') as input_file:
             lines_from_file = [line.rstrip('\n') for line in input_file]
         self.songlist = [ json.loads( line, object_hook=lambda l: nt( 'song', l.keys() )( *l.values() ) ) for line in lines_from_file ]
 
     def write_to_binary_file(self, filename=bin_filename):
-        """
-        Metoda zapisujaca obecna liste utworow do pliku binarnego. Nie polecam tej metody, poniewaz pliki json sa
-        powszechnie uzywane i rozpoznawane oraz istnieje wiele gotowych bibliotek do odczytu jsonow.
-        Uzywana jest biblioteka dill. Mozna ja zainstalowac poprzez komende:
-            pip install dill
-        [Strona projektu dill](https://pypi.org/project/dill/)
-        Args:
-            filename - nazwa pliku binarnego. Analogicznie jak w metodzie `write_to_text_file`
-        """
         with open(filename, 'wb') as bin_file:
             dill.dump(self.songlist, bin_file)
 
     def open_from_binary_file(self, filename=bin_filename):
-        """
-        Metoda zapisujaca do listy songlist z pliku o nazwie filename.
-        Uzywana jest biblioteka dill. Mozna ja zainstalowac poprzez komende:
-            pip install dill
-        [Strona projektu dill](https://pypi.org/project/dill/)
-        Args:
-            filename - analogicznie jak w powyzszych metodach
-        """
         with open(filename, 'rb') as bin_file:
             self.songlist = dill.load(bin_file)
 
     def sort_songlist(self, sort_by='artist'):
-        """
-        Metoda sortujaca songlist wg podanego kryterium na miejscu, tzn. posortowana lista zastepuje obecna liste.
-        Args:
-            sort_by - kryterium, po ktorym nastepuje sortowanie w postaci stringa, domyslnie `artist`
-            Dostepne kryteria:
-                artist,
-                album,
-                title,
-                year,
-                duration_m,
-                duration_s
-        """
         self.songlist = sorted(self.songlist, key=attrgetter(sort_by))
 
     def search_in_songlist(self, search_string, search_by='artist'):
-        """
-        Metoda wyszukujaca w songlist wg podanego kryterium.
-        Args:
-            search_string - ciag znakow do wyszukania - pomijana jest wielkosc liter
-            search_by - kryterium wyszukiwania - analogicznie do argumentu `sort_by` w funkcji sort_songlist()
-        Example:
-            db.search_in_songlist(input('Wyszukaj po tytule: '), search_by='title')
-        """
         if search_by == 'year':
             self.searchresults = [song for song in self.songlist if int(search_string) == song.year]
         else:
@@ -136,7 +70,7 @@ class SongDatabase(object):
 
 class SongDatabaseHead(object):
     """
-    Klasa z frontendem dla klasy SongDatabase.
+    Frontend class for SongDatabase.
     """
 
     def __init__(self, lang='pl'):
@@ -150,6 +84,7 @@ class SongDatabaseHead(object):
     messages = {}
     db = SongDatabase()
     crit_dict = {'al': 'album', 'ar': 'artist', 't': 'title', 'y': 'year'}
+
     def start(self):
         _ = self.messages.get
 
@@ -185,9 +120,6 @@ class SongDatabaseHead(object):
         print(_('invalid_input'))
 
     def add_song(self):
-        """
-        Metoda dodajaca utwor do `songlist` w obiekcie db interaktywnie.
-        """
         _ = self.messages.get
         new_artist = input(_('artist') + ': ')
         new_album = input(_('album') + ': ')
@@ -199,9 +131,6 @@ class SongDatabaseHead(object):
         self.db.add_song(new_artist, new_album, new_title, new_year, new_duration_m, new_duration_s)
 
     def search(self):
-        """
-        Metoda wyszukujaca i (w przypadku argumentu False) drukujaca na ekran liste utworow spelniajacych kryteria.
-        """
         _ = self.messages.get
         print(_('search_main'))
         criteria = 'h'
@@ -213,9 +142,6 @@ class SongDatabaseHead(object):
         self.pretty_print_songlist(searchresults=True)
 
     def sort_songlist(self):
-        """
-        Metoda sortujaca wg podanego kryterium na miejscu, czyli bezposrednio w db.songlist
-        """
         _ = self.messages.get
         criteria = 'h'
         while criteria == 'h':
@@ -224,22 +150,11 @@ class SongDatabaseHead(object):
         self.db.sort_songlist(sort_by=self.crit_dict.get(criteria, 'album'))
 
     def remove_songs(self):
-        """
-        Metoda wyszukujaca i usuwajaca utwory spelniajace kryteria.
-        """
         _ = self.messages.get
         self.search()
         self.db.remove_songs() if input(_('ensure')).lower() == 'y' else print(_('aborted'))
 
     def pretty_print_songlist(self, searchresults=False):
-        """
-        Metoda wyswietlajaca na ekranie liste utworow lub liste utworzona w wyniku wyszukiwania.
-        Pretty print to ogolne okreslenie na wyswietlenie informacji w formacie jak najczytelniejszym dla uzytkownika.
-        Args:
-            searchresults - argument typu boolean (True / False).
-                False - drukuje cala liste utworow `songlist`
-                True - drukuje liste utworzona w wyniku wyszukiwania `searchresults`
-        """
         _ = self.messages.get
         print('{0:^25s}|{1:^25s}|{2:^30s}|{3:^6}|{4:>3}:{5:>2}'.format(_('artist'), _('album'), _('title'), _('year'), 'MM', 'SS'))
         print('{0:=^96}'.format(''))
@@ -255,9 +170,6 @@ class SongDatabaseHead(object):
         print() # empty line
 
     def change_text_filename(self):
-        """
-        Metoda pozwalajaca zmienic domyslna nazwe pliku tekstowego.
-        """
         _ = self.messages.get
         print(_('change_text_filename'), end='')
         new_filename = input()
@@ -267,9 +179,6 @@ class SongDatabaseHead(object):
             self.db.filename = 'songs.json'
 
     def change_binary_filename(self):
-        """
-        Metoda pozwalajaca zmienic domyslna nazwe pliku binarnego.
-        """
         _ = self.messages.get
         print(_('change_binary_filename'), end='')
         new_bin_filename = input()
@@ -279,9 +188,6 @@ class SongDatabaseHead(object):
             self.db.bin_filename = 'songs.pickle'
 
     def change_language(self):
-        """
-        Metoda zmieniajaca jezyk (odczytujaca inny plik z komunikatami)
-        """
         if self.lang == 'pl': self.lang = 'en'
         else: self.lang = 'pl'
         self.messages = {}
@@ -290,26 +196,6 @@ class SongDatabaseHead(object):
         self.start()
 
 
-dbh = SongDatabaseHead('pl') # change to en if you want the app to start in English
-
-dbh.start()
-"""
-Poki co, napisana jest wiekszosc backendu i tylko mala czesc frontendu.
-TODO:
-    napisac frontend
-Changelog:
-    v0.1 Beta:
-        dodana obsluga plikow binarnych (biblioteka dill)
-    v0.1.0.1 Beta / Alpha:
-        dodana klasa frontendu (SongDatabaseHead)
-        przeniesienie metody pretty_print_songlist do klasy frontendu
-        dodana obsluga plikow jezykowych w formacie json
-    v0.2 Beta:
-        dopracowany frontend
-        dodana metoda pozwalajaca usuwac elementy z listy
-        dodane metody do frontendu (wszystkie wywolujace metody w klasie SongDatabase)
-        dodana metoda zmieniajaca jezyk
-    v0.3 Beta:
-        dodane sortowanie do frontendu
-Dokumentacja stworzona na podstawie zalecen Google dot. dokumentacji w Pythonie.
-"""
+if(__name__ == '__main__'):
+    dbh = SongDatabaseHead('pl') # change to en if you want the app to start in English
+    dbh.start()

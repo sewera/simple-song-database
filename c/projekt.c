@@ -16,7 +16,8 @@ void restore_prev_pointers(Song **head_ref) {
   /**
    * Simple function restoring (Song*) node->prev pointers
    * because merge_sort changes only node->next pointers
-   * while prev pointers remain unchanged. TESTED, UPDATED
+   * while prev pointers remain unchanged. Original
+   * sort function is for single-linked list. //TESTED, UPDATED
    */
   Song *current = *head_ref;
   current->prev = NULL;
