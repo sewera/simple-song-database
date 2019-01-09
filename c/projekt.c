@@ -27,13 +27,14 @@ void restore_prev_pointers(Song **head_ref) {
   }
 }
 
-Song* sorted_merge(Song *sublist_a, Song *sublist_b) {
+Song *sorted_merge(Song *sublist_a, Song *sublist_b, char criterion) {
   /* See https://www.geeksforgeeks.org/?p=3622 for details of this function */
   /**
    * comparison occurs here (year > year)
    *
    */
-  Song* result = NULL;
+  Song *result = NULL;
+  int string_length = 0;
 
   /* Base cases */
   if (sublist_a == NULL)
@@ -42,12 +43,98 @@ Song* sorted_merge(Song *sublist_a, Song *sublist_b) {
     return sublist_a;
 
   /* Pick either a or b, and recur */
+  /*
   if (sublist_a->year <= sublist_b->year) {
     result = sublist_a;
     result->next = sorted_merge(sublist_a->next, sublist_b);
   } else {
     result = sublist_b;
     result->next = sorted_merge(sublist_a, sublist_b->next);
+  }
+  */
+
+  switch (criterion) {
+
+    case 'a': // artist
+
+      if (strlen(sublist_a->artist) <= strlen(sublist_b->artist))
+        string_length = strlen(sublist_a->artist);
+      else
+        string_length = strlen(sublist_b->artist);
+
+      if (strncmp(sublist_a->artist, sublist_b->artist, string_length) <= 0) {
+        result = sublist_a;
+        result->next = sorted_merge(sublist_a->next, sublist_b, 'a');
+      } else {
+        result = sublist_b;
+        result->next = sorted_merge(sublist_a, sublist_b->next, 'a');
+      }
+
+      break;
+
+    case 'l': // album
+
+      if (strlen(sublist_a->album) <= strlen(sublist_b->album))
+        string_length = strlen(sublist_a->album);
+      else
+        string_length = strlen(sublist_b->album);
+
+      if (strncmp(sublist_a->album, sublist_b->album, string_length) <= 0) {
+        result = sublist_a;
+        result->next = sorted_merge(sublist_a->next, sublist_b, 'l');
+      } else {
+        result = sublist_b;
+        result->next = sorted_merge(sublist_a, sublist_b->next, 'l');
+      }
+
+      break;
+
+    case 't': // title
+
+      if (strlen(sublist_a->title) <= strlen(sublist_b->title))
+        string_length = strlen(sublist_a->title);
+      else
+        string_length = strlen(sublist_b->title);
+
+      if (strncmp(sublist_a->title, sublist_b->title, string_length) <= 0) {
+        result = sublist_a;
+        result->next = sorted_merge(sublist_a->next, sublist_b, 't');
+      } else {
+        result = sublist_b;
+        result->next = sorted_merge(sublist_a, sublist_b->next, 't');
+      }
+
+      break;
+
+    case 'y': // year
+
+      if (sublist_a->year <= sublist_b->year) {
+        result = sublist_a;
+        result->next = sorted_merge(sublist_a->next, sublist_b, 'y');
+      } else {
+        result = sublist_b;
+        result->next = sorted_merge(sublist_a, sublist_b->next, 'y');
+      }
+
+      break;
+
+    default:
+
+      if (strlen(sublist_a->artist) <= strlen(sublist_b->artist))
+        string_length = strlen(sublist_a->artist);
+      else
+        string_length = strlen(sublist_b->artist);
+
+      if (strncmp(sublist_a->artist, sublist_b->artist, string_length) <= 0) {
+        result = sublist_a;
+        result->next = sorted_merge(sublist_a->next, sublist_b, 'a');
+      } else {
+        result = sublist_b;
+        result->next = sorted_merge(sublist_a, sublist_b->next, 'a');
+      }
+
+      break;
+
   }
 
   return result;
@@ -60,8 +147,8 @@ void front_back_split(Song *source, Song **front_ref, Song **back_ref) {
   * If the length is odd, the extra node should go in the front list.
   * Uses the fast/slow pointer strategy.
   */
-  Song* fast;
-  Song* slow;
+  Song *fast;
+  Song *slow;
   slow = source;
   fast = source->next;
 
@@ -81,11 +168,11 @@ void front_back_split(Song *source, Song **front_ref, Song **back_ref) {
   slow->next = NULL;
 }
 
-void merge_sort(Song **head_ref) {
+void merge_sort(Song **head_ref, char criterion) {
 /* sorts the linked list by changing next pointers (not data) */
-  Song* head = *head_ref;
-  Song* sublist_a;
-  Song* sublist_b;
+  Song *head = *head_ref;
+  Song *sublist_a;
+  Song *sublist_b;
 
   /* Base case -- length 0 or 1 */
   if ((head == NULL) || (head->next == NULL))
@@ -95,15 +182,15 @@ void merge_sort(Song **head_ref) {
   front_back_split(head, &sublist_a, &sublist_b);
 
   /* Recursively sort the sublists */
-  merge_sort(&sublist_a);
-  merge_sort(&sublist_b);
+  merge_sort(&sublist_a, criterion);
+  merge_sort(&sublist_b, criterion);
 
   /* answer = merge the two sorted lists together */
-  *head_ref = sorted_merge(sublist_a, sublist_b);
+  *head_ref = sorted_merge(sublist_a, sublist_b, criterion);
 }
 
-void merge_sort_doubly_linked(Song **head_ref) {
-  merge_sort(head_ref);
+void merge_sort_doubly_linked(Song **head_ref, char criterion) {
+  merge_sort(head_ref, criterion);
   restore_prev_pointers(head_ref);
 }
 
@@ -116,7 +203,7 @@ int main(int argc, char const *argv[]) {
 
   printf("%s -- %s -- %s -- %d -- %d -- %d\n", head->artist, head->album, head->title, head->year, head->duration_m, head->duration_s);
   print_list(head);
-  merge_sort_doubly_linked(&head);
+  merge_sort_doubly_linked(&head, 'a');
   print_list(head);
   printf("\n");
 

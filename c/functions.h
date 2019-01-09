@@ -64,7 +64,7 @@ void append(Song **head_ref, int new_year) {
 
   /* 4. If the Linked List is empty, then make the new
         node as head */
-  if(*head_ref == NULL) {
+  if (*head_ref == NULL) {
     new_node->prev = NULL;
     *head_ref = new_node;
     return;
@@ -103,7 +103,7 @@ void append_from_text_line(Song **head_ref, char *line) {
 
   /* 4. If the Linked List is empty, then make the new
         node as head */
-  if(*head_ref == NULL) {
+  if (*head_ref == NULL) {
     new_node->prev = NULL;
     *head_ref = new_node;
     return;
@@ -130,27 +130,29 @@ void print_list(Song* head) {
   Song* last;
   printf("\nTraversal in forward direction \n");
   while (head != NULL) {
-    printf(" %d ", head->year);
+    printf("%d ", head->year);
+    printf("%s ", head->artist);
     last = head;
     head = head->next;
   }
 
   printf("\nTraversal in reverse direction \n");
   while (last != NULL) {
-    printf(" %d ", last->year);
+    printf("%d ", last->year);
+    printf("%s ", last->artist);
     last = last->prev;
   }
 }
 
 void parse_file(const char *filename, Song **head_ref) {
   /* Check if songlist is empty */
-  if(*head_ref != NULL)
+  if (*head_ref != NULL)
     printf("Adding nodes at the end of a non-empty list\n");
 
   FILE *fp;
   char line[BUFFER_SIZE];
   fp = fopen(filename, "r");
-  while(fgets(line, BUFFER_SIZE, fp))
+  while (fgets(line, BUFFER_SIZE, fp))
     append_from_text_line(head_ref, line);
   fclose(fp);
 }
