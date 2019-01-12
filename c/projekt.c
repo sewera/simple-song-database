@@ -131,7 +131,7 @@ void search_song_head(Song **head_ref) {
             ! strncmp(
                       search_string,
                       song_ptr->artist,
-                      strlen(search_string) <= strlen(song_ptr->artist) ? strlen(search_string) : strlen(song_ptr->artist)
+                      strlen(search_string)-1
                      )
            ) {
           print_single_song(song_ptr);
