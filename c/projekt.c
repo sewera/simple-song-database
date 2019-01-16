@@ -20,7 +20,6 @@ void append_song_head(Song **head_ref) {
   char year[6];
   char duration_m[10];
   char duration_s[3];
-
   printf("Add a song\n");
   printf("Artist: ");
   fgets(artist, CHAR_LIMIT, stdin);

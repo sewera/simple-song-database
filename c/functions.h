@@ -1,3 +1,7 @@
+#include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include "structure.h"
 #ifndef BUFFER_SIZE
 #define BUFFER_SIZE 512
 #endif
