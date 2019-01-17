@@ -34,26 +34,24 @@ class SongDatabase(object):
     bin_filename = 'songs.pickle'
     searchresults = []
 
-    def add_song(
-                 self,
+    def add_song(self,
                  new_artist,
                  new_album,
                  new_title,
                  new_year,
                  new_duration_m,
-                 new_duration_s
-                ):
+                 new_duration_s):
         song = nt('song', 'artist album title year duration_m duration_s')
         self.songlist.append(
-                             song(
-                                  artist=new_artist,
-                                  album=new_album,
-                                  title=new_title,
-                                  year=new_year,
-                                  duration_m=new_duration_m,
-                                  duration_s=new_duration_s
-                                 )
-                            )
+            song(
+                artist=new_artist,
+                album=new_album,
+                title=new_title,
+                year=new_year,
+                duration_m=new_duration_m,
+                duration_s=new_duration_s
+            )
+        )
 
     def write_to_text_file(self, filename=filename):
         lines = [json.dumps(s._asdict()) for s in self.songlist]
@@ -67,10 +65,9 @@ class SongDatabase(object):
             lines_from_file = [line.rstrip('\n') for line in input_file]
         self.songlist = [
             json.loads(
-                       line,
-                       object_hook=lambda l: nt('song', l.keys())(*l.values())
-                      )
-            for line in lines_from_file
+                line,
+                object_hook=lambda l: nt('song', l.keys())(*l.values())
+            ) for line in lines_from_file
         ]
 
     def write_to_binary_file(self, filename=bin_filename):
@@ -94,10 +91,10 @@ class SongDatabase(object):
             self.searchresults = [
                 song for song in self.songlist
                 if re.search(
-                             search_string,
-                             attrgetter(search_by)(song),
-                             re.IGNORECASE
-                            )
+                    search_string,
+                    attrgetter(search_by)(song),
+                    re.IGNORECASE
+                )
             ]
 
     def remove_songs(self):
@@ -167,13 +164,13 @@ class SongDatabaseHead(object):
         new_duration_s = int(input(_('duration_s') + ': '))
 
         self.db.add_song(
-                         new_artist,
-                         new_album,
-                         new_title,
-                         new_year,
-                         new_duration_m,
-                         new_duration_s
-                        )
+            new_artist,
+            new_album,
+            new_title,
+            new_year,
+            new_duration_m,
+            new_duration_s
+        )
 
     def search(self):
         _ = self.messages.get
@@ -184,12 +181,9 @@ class SongDatabaseHead(object):
             criteria = input(_('search_choice'))  # like 'al' when empty
         search_string = input(_('search_string_prompt'))
         self.db.search_in_songlist(
-                                   search_string,
-                                   search_by=self.crit_dict.get(
-                                                                criteria,
-                                                                'album'
-                                                               )
-                                  )
+            search_string,
+            search_by=self.crit_dict.get(criteria, 'album')
+        )
         self.pretty_print_songlist(searchresults=True)
 
     def sort_songlist(self):

@@ -1,161 +1,87 @@
 /*
- * Huge mess in C, somewhat usable functions are in the file functions.h
- * Not for any practical use yet.
- * You don't have to look, check out project.py, it's infinity times better!
+ * 'Song Database' Simple C Program
+ * Version: v1.0
+ * Author: Blazej Sewera
+ * Copyright 2018
+ * E-mail: blazejok1@wp.pl
+ * Webpage: [https://github.com/jazzsewera]
+ * Check out project.py, it's infinity times better!
  */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "structure.h"
 #include "functions.h"
-#ifndef BUFFER_SIZE
-#define BUFFER_SIZE 512
-#endif
 
-void append_song_head(Song **head_ref) {
-  // Variables used in adding a new node
-  char artist[CHAR_LIMIT];
-  char album[CHAR_LIMIT];
-  char title[CHAR_LIMIT];
-  char year[6];
-  char duration_m[10];
-  char duration_s[3];
-  printf("Add a song\n");
-  printf("Artist: ");
-  fgets(artist, CHAR_LIMIT, stdin);
-  artist[strcspn(artist, "\n")] = '\0'; // removing newline characters from the input string
-  printf("Album: ");
-  fgets(album, CHAR_LIMIT, stdin);
-  album[strcspn(album, "\n")] = '\0';
-  printf("Title: ");
-  fgets(title, CHAR_LIMIT, stdin);
-  title[strcspn(title, "\n")] = '\0';
-  printf("Year: ");
-  fgets(year, 6, stdin);
-  printf("Duration (minutes): ");
-  fgets(duration_m, 10, stdin);
-  printf("Duration (seconds): ");
-  fgets(duration_s, 3, stdin);
+void start_head(Song **head_ref) {
+  const char *filename = "songs.txt";
+  const char *filename_bin = "songs.dbb";
+  char buffer[BUFFER_SIZE];
+  char choice;
 
-  append(head_ref, artist, album, title, atoi(year), (unsigned char) atoi(duration_m), (unsigned char) atoi(duration_s));
-}
+  printf("Song Database Program\n");
+  while (1) {
+    printf("Please choose an option (h - help): ");
+    fgets(buffer, BUFFER_SIZE, stdin);
+    choice = buffer[0];
 
-void search_song_head(Song **head_ref) {
-  char search_crit;
-  char search_string[CHAR_LIMIT];
-  Song *song_ptr = *head_ref;
-  int search_year;
-
-  printf(
-         "Search\n"
-         "\ta\tArtist\n\tl\tAlbum\n\tt\tTitle\n\ty\tYear\n"
-         "Search by [a]: "
-        );
-  //search_crit = fgetc(stdin);
-  //scanf("%c\n", &search_crit);
-  fgets(search_string, 3, stdin);
-  search_crit = search_string[0];
-  printf("Search: ");
-  fgets(search_string, CHAR_LIMIT, stdin);
-  switch (search_crit) {
-
-    case 'a': // artist
-
-      print_table_head();
-      while (song_ptr != NULL) {
-        if (
-            ! strncmp(
-                      search_string,
-                      song_ptr->artist,
-                      strlen(search_string)-1
-                     )
-           ) {
-          print_single_song(song_ptr);
+    switch (choice) {
+      case 'h':
+        print_help_head();
+        break;
+      case 'a':
+        append_song_head(head_ref);
+        break;
+      case 's':
+        search_song_head(head_ref);
+        break;
+      case 'm':
+        sort_list_head(head_ref);
+        break;
+      case 'p':
+        print_list(head_ref);
+        printf("\n");
+        break;
+      case 'r':
+        remove_song_head(head_ref);
+        break;
+      case 'f':
+        if (parse_text_file(head_ref, filename)) {
+          print_file_read_error(filename);
         }
-        song_ptr = song_ptr->next;
-      }
-      break;
-
-    case 'l': // album
-
-      print_table_head();
-      while (song_ptr != NULL) {
-        if (
-            ! strncmp(
-                      search_string,
-                      song_ptr->album,
-                      strlen(search_string)-1
-                     )
-           ) {
-          print_single_song(song_ptr);
+        break;
+      case 'b':
+        if (read_from_binary_file(head_ref, filename_bin)) {
+          print_file_read_error(filename_bin);
         }
-        song_ptr = song_ptr->next;
-      }
-      break;
-
-    case 't':
-
-      print_table_head();
-      while (song_ptr != NULL) {
-        if (
-            ! strncmp(
-                      search_string,
-                      song_ptr->title,
-                      strlen(search_string)-1
-                     )
-           ) {
-          print_single_song(song_ptr);
+        break;
+      case 'w':
+        if (write_to_text_file(head_ref, filename)) {
+          print_file_write_error();
         }
-        song_ptr = song_ptr->next;
-      }
-      break;
-
-    case 'y':
-
-      search_year = atoi(search_string);
-      print_table_head();
-      while (song_ptr != NULL) {
-        if (search_year == song_ptr->year) {
-          print_single_song(song_ptr);
+        break;
+      case 'v':
+        if (write_to_binary_file(head_ref, filename_bin)) {
+          print_file_read_error(filename_bin);
         }
-        song_ptr = song_ptr->next;
-      }
-      break;
-
-    default:
-
-      print_table_head();
-      while (song_ptr != NULL) {
-        if (
-            ! strncmp(
-                      search_string,
-                      song_ptr->artist,
-                      strlen(search_string)-1
-                     )
-           ) {
-          print_single_song(song_ptr);
-        }
-        song_ptr = song_ptr->next;
-      }
-      break;
+        break;
+      case 'e':
+      case 'q':
+        return;
+      default:
+        printf("[E] Invalid option!\n");
+        break;
+    }
   }
 }
 
-int main(int argc, char const *argv[]) {
-  // Necessary "objects" xD No, but really, variables.
-  const char filename[] = "songs.txt";
-  Song *head = NULL; // pointer to a first node
+int main() {
 
-  parse_file(filename, &head);
+  Song *head_ref = NULL; // pointer to a first node
 
-  print_list(&head);
-  merge_sort_doubly_linked(&head, 'a');
-  printf("\n");
-  print_list(&head);
-  printf("\n");
-  search_song_head(&head);
-  append_song_head(&head);
-  print_list(&head);
+  start_head(&head_ref);
+
+  free(head_ref);
 
   return 0;
 }
