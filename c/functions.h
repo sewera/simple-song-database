@@ -5,7 +5,7 @@
  * Copyright 2018
  * E-mail: blazejok1@wp.pl
  * Webpage: [https://github.com/jazzsewera]
- * Check out project.py, it's infinity times better!
+ * Check out projekt.py, it's infinity times better!
  */
 #include "structure.h"
 #ifndef BUFFER_SIZE
@@ -14,7 +14,7 @@
 #ifndef FUNCTIONS_H
 #define FUNCTIONS_H
 
-void free_list(Song *head);
+void free_list(Song **head_ref);
 
 int parse_text_file(Song **head_ref, const char *filename);
 

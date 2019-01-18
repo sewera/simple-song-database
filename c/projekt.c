@@ -5,7 +5,7 @@
  * Copyright 2018
  * E-mail: blazejok1@wp.pl
  * Webpage: [https://github.com/jazzsewera]
- * Check out project.py, it's infinity times better!
+ * Check out projekt.py, it's infinity times better!
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -14,6 +14,10 @@
 #include "functions.h"
 
 void start_head(Song **head_ref) {
+  /*
+   * Main frontend function launching different other functions,
+   * depending on user input.
+   */
   const char *filename = "songs.txt";
   const char *filename_bin = "songs.dbb";
   char buffer[BUFFER_SIZE];
@@ -81,7 +85,7 @@ int main() {
 
   start_head(&head_ref);
 
-  free(head_ref);
+  free_list(&head_ref);
 
   return 0;
 }

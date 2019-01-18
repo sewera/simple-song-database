@@ -5,7 +5,7 @@
  * Copyright 2018
  * E-mail: blazejok1@wp.pl
  * Webpage: [https://github.com/jazzsewera]
- * Check out project.py, it's infinity times better!
+ * Check out projekt.py, it's infinity times better!
  */
 #include <stdlib.h>
 #include <stdio.h>
@@ -28,23 +28,15 @@ void tokenize_line(Song *dest_song, char *src_line) {
   dest_song->duration_s = (unsigned char) atoi(strtok_r(tokptr, ",", &tokptr));
 }
 
-int tell_number_of_list_elements(Song **head_ref) {
-  Song *song_ptr = *head_ref;
-  int count = 0;
-  while (song_ptr != NULL) {
-    count++;
-    song_ptr = song_ptr->next;
+void free_list(Song **head_ref) {
+  Song *tmp = *head_ref;
+  Song *head = *head_ref;
+  while (tmp != NULL) {
+    head = tmp;
+    tmp = tmp->next;
+    free(head);
   }
-  return count;
-}
-
-void free_list(Song *head) {
-  Song *tmp;
-  while (head != NULL) {
-    tmp = head;
-    head = head->next;
-    free(tmp);
-  }
+  *head_ref = NULL;
 }
 
 void push(
@@ -182,6 +174,9 @@ void append_from_text_line(Song **head_ref, char *line) {
 }
 
 int parse_text_file(Song **head_ref, const char *filename) {
+  /**
+   * Function to parse line-by-line a text file.
+   */
   /* Check if songlist is empty */
   if (*head_ref != NULL)
     printf("[I] Adding nodes at the end of a non-empty list\n");
@@ -361,6 +356,10 @@ void merge_sort(Song **head_ref, char criterion) {
 }
 
 void remove_single_song(Song **head_ref, Song *song_ptr) {
+  /**
+   * Function to remove one song. Fixes next and prev pointers
+   * in adjacent nodes and frees memory allocated for the node.
+   */
   if (song_ptr == *head_ref) {
     if (song_ptr->next != NULL) {
       *head_ref = song_ptr->next;
@@ -519,6 +518,11 @@ void append_song_head(Song **head_ref) {
 }
 
 void search_song_head(Song **head_ref) {
+  /**
+   * User interface for searching for a song.
+   * Search string doesn't need to be complete,
+   * but unfortunately, search is case-sensitive.
+   */
   char search_crit;
   char search_string[CHAR_LIMIT];
   Song *song_ptr = *head_ref;
@@ -614,6 +618,10 @@ void search_song_head(Song **head_ref) {
 }
 
 void remove_song_head(Song **head_ref) {
+  /**
+   * User interface to remove songs matching search results.
+   * Blank input in search string results in truncating the list.
+   */
   char search_crit;
   char search_string[CHAR_LIMIT];
   Song *song_ptr = *head_ref;
