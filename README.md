@@ -20,7 +20,7 @@ Although it might seem not very useful, it has a few code snippets and examples 
 - list sorting [merge sort](https://www.geeksforgeeks.org/merge-sort-for-doubly-linked-list/)
 - searching in list (`strncmp()`)
 - tokenizing input (`strtok()`)
-- writing to and reading form CSV file
+- writing to and reading from CSV file
 
 -----------------------------------------
-> As always, made with <3 by jazz
+As always, made with <3 by jazz
